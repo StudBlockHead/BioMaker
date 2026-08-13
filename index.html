@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BioSpace - Custom Bio Link Maker</title>
+  <title>BioSpace - Secure Bio Link Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -16,78 +16,87 @@
       --subtext: #8b949e;
       --border-radius: 16px;
       --glow: rgba(114, 137, 218, 0.4);
+      --danger: #f85149;
+      --success: #3fb950;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; transition: background 0.3s, color 0.3s; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; transition: background 0.3s, color 0.3s, border 0.3s; }
     body { background-color: var(--bg-color); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-x: hidden; }
 
     /* Layout Containers */
     .app-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; z-index: 2; }
     .card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--border-radius); padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px var(--glow); text-align: center; position: relative; }
 
-    /* Profile Elements */
+    /* Profile UI */
     .avatar-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto 16px; }
     .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); }
-    .badge { position: absolute; bottom: 0; right: 0; background: var(--accent); padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
     h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
     p.bio-text { color: var(--subtext); font-size: 0.95rem; margin-bottom: 20px; white-space: pre-line; }
 
-    /* Link Buttons */
+    /* Links */
     .links-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-    .link-item { display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.08); padding: 12px 16px; border-radius: 12px; text-decoration: none; color: var(--text); gap: 12px; cursor: pointer; position: relative; overflow: hidden; }
+    .link-item { display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.08); padding: 12px 16px; border-radius: 12px; text-decoration: none; color: var(--text); gap: 12px; cursor: pointer; }
     .link-item:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px); box-shadow: 0 4px 15px var(--glow); }
     .link-item img.favicon { width: 24px; height: 24px; border-radius: 6px; }
     .link-details { text-align: left; flex-grow: 1; }
     .link-title { font-weight: 600; font-size: 0.95rem; }
     .link-subtitle { font-size: 0.75rem; color: var(--subtext); }
 
-    /* Controls Bar */
+    /* Control Elements */
     .nav-bar { position: fixed; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 10; }
-    .btn { background: var(--accent); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
-    .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+    .btn { background: var(--accent); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; width: 100%; margin-top: 6px; }
+    .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); width: auto; }
     .btn:hover { opacity: 0.9; }
+    .btn-danger { background: var(--danger); }
 
-    /* Music Player Widget */
-    .music-widget { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 10px 16px; border-radius: 12px; margin-top: 15px; }
-    .music-controls button { background: none; border: none; color: var(--text); cursor: pointer; font-size: 1.1rem; }
-
-    /* Modals & Forms */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+    /* Modals & Authentication */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     .modal.active { display: flex; }
-    .modal-content { background: #161b22; width: 100%; max-width: 400px; border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 12px; text-align: left; }
-    input, textarea, select { width: 100%; background: #0d1117; border: 1px solid #30363d; padding: 10px; border-radius: 8px; color: var(--text); margin-top: 4px; }
+    .modal-content { background: #161b22; width: 100%; max-width: 420px; border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 14px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+    
+    input, textarea, select { width: 100%; background: #0d1117; border: 1px solid #30363d; padding: 12px; border-radius: 8px; color: var(--text); font-size: 0.9rem; margin-top: 4px; }
+    input:focus, select:focus { outline: none; border-color: var(--accent); }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--subtext); }
 
-    /* Edit Overlays */
+    /* Status Notifications */
+    .status-msg { font-size: 0.85rem; padding: 10px; border-radius: 8px; display: none; text-align: center; font-weight: 600; }
+    .status-msg.error { display: block; background: rgba(248, 81, 73, 0.15); color: var(--danger); border: 1px solid var(--danger); }
+    .status-msg.success { display: block; background: rgba(63, 185, 80, 0.15); color: var(--success); border: 1px solid var(--success); }
+
+    /* Editing Overlays */
     .edit-only { display: none; }
-    body.is-editing .edit-only { display: block; }
-    .link-actions { display: flex; gap: 6px; }
+    body.is-editing .edit-only { display: inline-flex; }
+
+    /* Music Player */
+    .music-widget { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); padding: 12px 16px; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.05); }
+    .music-controls button { background: none; border: none; color: var(--text); cursor: pointer; font-size: 1.1rem; padding: 0 4px; }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation Controls -->
+  <!-- Upper Navigation Bar -->
   <div class="nav-bar">
-    <button class="btn btn-secondary" id="authBtn" onclick="openAuthModal()">🔑 Login / Sign Up</button>
-    <button class="btn edit-only" onclick="undo()">↩ Undo</button>
-    <button class="btn edit-only" onclick="redo()">↪ Redo</button>
+    <button class="btn btn-secondary" id="authBtn" onclick="openAuthModal()">🔑 Account Protection</button>
+    <button class="btn btn-secondary edit-only" onclick="undoState()">↩ Undo</button>
+    <button class="btn btn-secondary edit-only" onclick="redoState()">↪ Redo</button>
     <button class="btn btn-secondary" id="editToggleBtn" onclick="toggleEditMode()" style="display:none;">✏️ Edit Bio</button>
   </div>
 
-  <!-- Main Bio Display -->
+  <!-- Primary Bio Card -->
   <div class="app-container">
     <div class="card" id="bioCard">
       <div class="avatar-wrapper">
-        <img id="avatarImg" class="avatar" src="https://via.placeholder.com/100" alt="Profile Picture">
+        <img id="avatarImg" class="avatar" src="https://via.placeholder.com/100" alt="Avatar">
       </div>
       <h1 id="displayName">@username</h1>
-      <p id="bioDescription" class="bio-text">Welcome to my bio! Login to customize this page.</p>
+      <p id="bioDescription" class="bio-text">Welcome! Click Account Protection to register your unique username with password or passkey security.</p>
 
       <!-- Links Container -->
       <div class="links-list" id="linksList"></div>
 
-      <!-- Background Music Player -->
+      <!-- Music Player Engine -->
       <div class="music-widget" id="musicPlayer" style="display:none;">
-        <span id="trackName" style="font-size: 0.8rem;">🎵 No track loaded</span>
+        <span id="trackName" style="font-size: 0.8rem; font-weight: 600;">🎵 Audio Track</span>
         <div class="music-controls">
           <button onclick="playPrevTrack()">⏮️</button>
           <button id="playPauseBtn" onclick="toggleMusic()">▶️</button>
@@ -97,79 +106,123 @@
     </div>
   </div>
 
-  <!-- Auth Modal -->
+  <!-- Multi-Stage Authentication Modal -->
   <div class="modal" id="authModal">
     <div class="modal-content">
-      <h2>Account Access</h2>
-      <label>Username
-        <input type="text" id="authUsername" placeholder="e.g. cyber_samurai">
-      </label>
-      <button class="btn" onclick="handleAuth('login')">Log In / Load Profile</button>
-      <button class="btn btn-secondary" onclick="handlePasskeyAuth()">🔑 Login with Passkey / Biometrics</button>
-      <button class="btn btn-secondary" onclick="closeModal('authModal')">Cancel</button>
+      <h2 id="authModalTitle">Account Security</h2>
+      <div id="authStatus" class="status-msg"></div>
+
+      <!-- Stage 1: Username Check -->
+      <form id="usernameForm" onsubmit="event.preventDefault(); processUsernameStep();">
+        <label>Username Handle
+          <input type="text" id="authUsername" autocomplete="username" placeholder="e.g. alex_dev" required>
+        </label>
+        <button type="submit" class="btn">Continue ➔</button>
+      </form>
+
+      <!-- Stage 2A: Registration Setup -->
+      <form id="registerForm" style="display:none;" onsubmit="event.preventDefault(); processRegistration();">
+        <p style="font-size: 0.85rem; color: var(--subtext);">Creating a new unique bio page for this username. Choose your security options below:</p>
+
+        <label>Security Requirement
+          <select id="secModeSelect" onchange="toggleSecFields()">
+            <option value="password">Password Only</option>
+            <option value="passkey">Passkey / Biometrics Only</option>
+            <option value="double">Double Authentication (Password + Passkey)</option>
+          </select>
+        </label>
+
+        <div id="passwordFieldGroup">
+          <label>Set Master Password
+            <input type="password" id="registerPassword" autocomplete="new-password" placeholder="••••••••••••">
+          </label>
+        </div>
+
+        <button type="submit" class="btn" id="regSubmitBtn">Create Protected Account</button>
+      </form>
+
+      <!-- Stage 2B: Verification Challenge -->
+      <form id="loginForm" style="display:none;" onsubmit="event.preventDefault(); processLogin();">
+        <div id="loginPasswordField" style="display:none;">
+          <label>Enter Account Password
+            <input type="password" id="loginPassword" autocomplete="current-password" placeholder="••••••••••••">
+          </label>
+        </div>
+
+        <div id="loginPasskeyField" style="display:none; text-align: center; padding: 10px 0;">
+          <p style="font-size: 0.85rem; color: var(--subtext);">Biometric verification or hardware passkey required for this account.</p>
+        </div>
+
+        <button type="submit" class="btn" id="loginSubmitBtn">Authenticate Access</button>
+      </form>
+
+      <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="closeAuthModal()">Cancel</button>
     </div>
   </div>
 
-  <!-- Edit Profile Modal -->
+  <!-- Profile Customization Panel -->
   <div class="modal" id="editModal">
-    <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
-      <h2>Edit Bio Profile</h2>
+    <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
+      <h2>Bio Customizer</h2>
       <label>Display Name <input type="text" id="editName"></label>
       <label>Bio Text <textarea id="editBio" rows="3"></textarea></label>
-      <label>Profile Picture / GIF
+      <label>Avatar / Transparent GIF / PNG
         <input type="file" id="editAvatarFile" accept="image/*">
       </label>
       
-      <h3>Theme Customs (Nitro Style)</h3>
-      <label>Background Color <input type="color" id="editBgColor" value="#0b0e14"></label>
-      <label>Card Color <input type="color" id="editCardColor" value="#161b22"></label>
-      <label>Accent & Glow Color <input type="color" id="editAccentColor" value="#7289da"></label>
+      <h3 style="margin-top: 10px;">Nitro Theme Engine</h3>
+      <label>Page Background Color <input type="color" id="editBgColor"></label>
+      <label>Card Background Color <input type="color" id="editCardColor"></label>
+      <label>Accent & Glow Tint <input type="color" id="editAccentColor"></label>
 
-      <h3>Links</h3>
-      <div id="editLinksContainer"></div>
-      <button class="btn btn-secondary" onclick="addLinkField()">+ Add New Link</button>
+      <h3 style="margin-top: 10px;">Links Management</h3>
+      <div id="editLinksContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      <button class="btn btn-secondary" style="width: 100%; margin-top: 6px;" onclick="addLinkField()">+ Add Link</button>
 
-      <h3>Music & Audio SFX</h3>
-      <label>Upload Track (MP3/WAV)
-        <input type="file" id="editMusicFile" accept="audio/*" multiple>
+      <h3 style="margin-top: 10px;">Audio Tracks</h3>
+      <label>Upload Track Files (MP3 / WAV)
+        <input type="file" id="editMusicFile" accept="audio/*" multiple onchange="handleAudioUpload(event)">
       </label>
       
-      <button class="btn" style="margin-top: 10px;" onclick="saveProfileChanges()">💾 Save Changes</button>
-      <button class="btn btn-secondary" onclick="closeModal('editModal')">Close</button>
+      <button class="btn" style="margin-top: 16px;" onclick="saveProfileChanges()">💾 Save Bio Changes</button>
+      <button class="btn btn-secondary" style="width: 100%;" onclick="closeModal('editModal')">Close</button>
     </div>
   </div>
 
   <script>
     /* ==========================================================================
-       IndexedDB & Application State
+       Application Core State & Database Setup
        ========================================================================== */
     let db;
     let currentUser = null;
+    let targetAccount = null;
     let isEditing = false;
+
+    // Undo / Redo Memory Stacks
     let historyStack = [];
     let historyIndex = -1;
 
-    // Default Initial Profile State
+    // Active User Profile Template
     let profileData = {
       username: "",
       name: "Your Name",
-      bio: "This is your customizable bio! Click edit to add links and tunes.",
+      bio: "Welcome to my customized profile! Log in to edit your bio.",
       avatar: "https://via.placeholder.com/100",
       theme: { bg: "#0b0e14", card: "#161b22", accent: "#7289da" },
       links: [
         { title: "GitHub", subtitle: "@username", url: "https://github.com" },
-        { title: "Discord Server", subtitle: "Join the community", url: "https://discord.com" }
+        { title: "Discord", subtitle: "Join Server", url: "https://discord.com" }
       ],
       tracks: []
     };
 
-    // Audio Engine
-    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // Web Audio Engine Initialization
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let currentTrackIndex = 0;
-    let audioPlayer = new Audio();
+    const audioPlayer = new Audio();
 
-    // Initialize Database
-    const dbReq = indexedDB.open("BioSpaceDB", 2);
+    // Open IndexedDB
+    const dbReq = indexedDB.open("BioSpaceSecureDB", 3);
     dbReq.onupgradeneeded = (e) => {
       db = e.target.result;
       if (!db.objectStoreNames.contains("profiles")) {
@@ -182,121 +235,294 @@
     };
 
     /* ==========================================================================
-       Audio & Instant Sound Effects (Web Audio API)
+       Cryptography & WebAuthn Utility Functions
        ========================================================================== */
-    function playInstantClickSFX() {
-      if (audioContext.state === 'suspended') audioContext.resume();
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, audioContext.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.05);
-      gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
-      osc.connect(gain);
-      gain.connect(audioContext.destination);
-      osc.start();
-      osc.stop(audioContext.currentTime + 0.05);
+    async function hashPassword(password) {
+      const msgUint8 = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function bufferToBase64(buffer) {
+      return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    }
+
+    function base64ToBuffer(base64) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes.buffer;
+    }
+
+    async function registerWebAuthnPasskey(username) {
+      if (!window.PublicKeyCredential) {
+        throw new Error("Passkeys and WebAuthn biometrics are not supported in this browser.");
+      }
+
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const userId = new TextEncoder().encode(username);
+
+      const publicKeyCredentialCreationOptions = {
+        challenge: challenge,
+        rp: { name: "BioSpace Account Protection" },
+        user: {
+          id: userId,
+          name: username,
+          displayName: username
+        },
+        pubKeyCredParams: [
+          { alg: -7, type: "public-key" },   // ES256
+          { alg: -257, type: "public-key" }  // RS256
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: "platform", // Local Fingerprint / Touch ID / Windows Hello
+          userVerification: "required"
+        },
+        timeout: 60000
+      };
+
+      const credential = await navigator.credentials.create({
+        publicKey: publicKeyCredentialCreationOptions
+      });
+
+      return bufferToBase64(credential.rawId);
+    }
+
+    async function verifyWebAuthnPasskey(passkeyId) {
+      if (!window.PublicKeyCredential) {
+        throw new Error("Passkeys are not supported on this device.");
+      }
+
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const rawIdBuffer = base64ToBuffer(passkeyId);
+
+      const publicKeyCredentialRequestOptions = {
+        challenge: challenge,
+        allowCredentials: [{
+          id: rawIdBuffer,
+          type: 'public-key'
+        }],
+        userVerification: "required",
+        timeout: 60000
+      };
+
+      const assertion = await navigator.credentials.get({
+        publicKey: publicKeyCredentialRequestOptions
+      });
+
+      return assertion !== null;
     }
 
     /* ==========================================================================
-       Authentication & Profile Persistence
+       Account Protection Logic
        ========================================================================== */
     function checkUrlHash() {
-      const hash = window.location.hash.replace('#@', '');
+      const hash = window.location.hash.replace('#@', '').trim().toLowerCase();
       if (hash) {
         loadProfile(hash);
       }
     }
 
-    function handleAuth(type) {
-      const username = document.getElementById("authUsername").value.trim().toLowerCase();
-      if (!username) return alert("Please enter a valid username.");
+    function showAuthStatus(msg, type) {
+      const el = document.getElementById("authStatus");
+      el.textContent = msg;
+      el.className = `status-msg ${type}`;
+    }
 
-      const transaction = db.transaction(["profiles"], "readwrite");
-      const store = transaction.objectStore("profiles");
+    function processUsernameStep() {
+      const username = document.getElementById("authUsername").value.trim().toLowerCase();
+      if (!username) return showAuthStatus("Please enter a valid username handle.", "error");
+
+      const tx = db.transaction(["profiles"], "readonly");
+      const store = tx.objectStore("profiles");
       const req = store.get(username);
 
       req.onsuccess = () => {
-        if (req.result) {
-          profileData = req.result;
+        targetAccount = req.result;
+        document.getElementById("usernameForm").style.display = "none";
+
+        if (targetAccount) {
+          // Account Exists: Prompt Verification
+          document.getElementById("authModalTitle").textContent = `Authenticate @${username}`;
+          document.getElementById("loginForm").style.display = "block";
+          
+          if (targetAccount.secMode === "password" || targetAccount.secMode === "double") {
+            document.getElementById("loginPasswordField").style.display = "block";
+          }
+          if (targetAccount.secMode === "passkey" || targetAccount.secMode === "double") {
+            document.getElementById("loginPasskeyField").style.display = "block";
+          }
         } else {
-          // Sign Up
-          profileData.username = username;
-          profileData.name = `@${username}`;
-          store.put(profileData);
+          // Account Available: Setup Security Options
+          document.getElementById("authModalTitle").textContent = `Create @${username}`;
+          document.getElementById("registerForm").style.display = "block";
+          toggleSecFields();
         }
-        currentUser = username;
-        window.location.hash = `@${username}`;
-        document.getElementById("editToggleBtn").style.display = "block";
-        document.getElementById("authBtn").textContent = `👤 @${username}`;
-        closeModal("authModal");
-        pushHistory();
-        renderProfile();
       };
     }
 
-    // WebAuthn Passkey Placeholder Integration
-    async function handlePasskeyAuth() {
-      if (!window.PublicKeyCredential) return alert("Passkeys are not supported on this browser.");
-      alert("Passkey authentication successfully verified via local authenticator!");
-      handleAuth('login');
+    function toggleSecFields() {
+      const mode = document.getElementById("secModeSelect").value;
+      const pwdGroup = document.getElementById("passwordFieldGroup");
+      pwdGroup.style.display = (mode === "passkey") ? "none" : "block";
     }
 
-    function saveToDatabase() {
-      if (!currentUser) return;
-      const transaction = db.transaction(["profiles"], "readwrite");
-      const store = transaction.objectStore("profiles");
-      store.put(profileData);
+    async function processRegistration() {
+      const username = document.getElementById("authUsername").value.trim().toLowerCase();
+      const mode = document.getElementById("secModeSelect").value;
+      const rawPassword = document.getElementById("registerPassword").value;
+
+      let passwordHash = null;
+      let passkeyId = null;
+
+      try {
+        if (mode === "password" || mode === "double") {
+          if (!rawPassword || rawPassword.length < 4) {
+            return showAuthStatus("Password must be at least 4 characters long.", "error");
+          }
+          passwordHash = await hashPassword(rawPassword);
+        }
+
+        if (mode === "passkey" || mode === "double") {
+          showAuthStatus("Scan fingerprint or biometrics now...", "success");
+          passkeyId = await registerWebAuthnPasskey(username);
+        }
+
+        // Save New User Record
+        profileData.username = username;
+        profileData.name = `@${username}`;
+        profileData.secMode = mode;
+        profileData.passwordHash = passwordHash;
+        profileData.passkeyId = passkeyId;
+
+        const tx = db.transaction(["profiles"], "readwrite");
+        const store = tx.objectStore("profiles");
+        store.put(profileData);
+
+        currentUser = username;
+        window.location.hash = `@${username}`;
+        
+        showAuthStatus("Account created successfully!", "success");
+        setTimeout(() => {
+          closeAuthModal();
+          onAuthenticated();
+        }, 800);
+
+      } catch (err) {
+        showAuthStatus(`Registration failed: ${err.message}`, "error");
+      }
+    }
+
+    async function processLogin() {
+      const mode = targetAccount.secMode;
+      const inputPwd = document.getElementById("loginPassword").value;
+
+      try {
+        // Step 1: Verify Password
+        if (mode === "password" || mode === "double") {
+          const inputHash = await hashPassword(inputPwd);
+          if (inputHash !== targetAccount.passwordHash) {
+            return showAuthStatus("Incorrect password. Access denied.", "error");
+          }
+        }
+
+        // Step 2: Verify Passkey / Biometrics
+        if (mode === "passkey" || mode === "double") {
+          showAuthStatus("Please complete biometric prompt...", "success");
+          const verified = await verifyWebAuthnPasskey(targetAccount.passkeyId);
+          if (!verified) {
+            return showAuthStatus("Passkey verification failed.", "error");
+          }
+        }
+
+        // Authentication Successful
+        currentUser = targetAccount.username;
+        profileData = targetAccount;
+        window.location.hash = `@${currentUser}`;
+
+        showAuthStatus("Authenticated successfully!", "success");
+        setTimeout(() => {
+          closeAuthModal();
+          onAuthenticated();
+        }, 800);
+
+      } catch (err) {
+        showAuthStatus(`Authentication error: ${err.message}`, "error");
+      }
+    }
+
+    function onAuthenticated() {
+      document.getElementById("editToggleBtn").style.display = "inline-flex";
+      document.getElementById("authBtn").textContent = `👤 @${currentUser}`;
+      pushState();
+      renderProfile();
+    }
+
+    function closeAuthModal() {
+      closeModal("authModal");
+      document.getElementById("usernameForm").style.display = "block";
+      document.getElementById("registerForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("loginPasswordField").style.display = "none";
+      document.getElementById("loginPasskeyField").style.display = "none";
+      document.getElementById("authUsername").value = "";
+      document.getElementById("registerPassword").value = "";
+      document.getElementById("loginPassword").value = "";
+      document.getElementById("authStatus").className = "status-msg";
     }
 
     /* ==========================================================================
        Rendering Engine
        ========================================================================== */
     function renderProfile() {
-      // Set Text Data
       document.getElementById("displayName").textContent = profileData.name;
       document.getElementById("bioDescription").textContent = profileData.bio;
       document.getElementById("avatarImg").src = profileData.avatar;
 
-      // Apply Dynamic Themes
+      // Theme Application
       document.documentElement.style.setProperty('--bg-color', profileData.theme.bg);
       document.documentElement.style.setProperty('--card-bg', profileData.theme.card);
       document.documentElement.style.setProperty('--accent', profileData.theme.accent);
       document.documentElement.style.setProperty('--glow', `${profileData.theme.accent}66`);
 
-      // Render Links with Favicons
+      // Links Rendering
       const linksContainer = document.getElementById("linksList");
       linksContainer.innerHTML = "";
       profileData.links.forEach(link => {
-        const domain = new URL(link.url).hostname;
+        let domain = "example.com";
+        try { domain = new URL(link.url).hostname; } catch(e){}
         const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
         const a = document.createElement("a");
         a.className = "link-item";
         a.href = link.url;
         a.target = "_blank";
-        a.onclick = () => playInstantClickSFX();
+        a.onclick = () => playInstantSFX();
         a.innerHTML = `
           <img class="favicon" src="${faviconUrl}" alt="icon" onerror="this.src='https://via.placeholder.com/24'">
           <div class="link-details">
-            <div class="link-title">${link.title}</div>
-            <div class="link-subtitle">${link.subtitle}</div>
+            <div class="link-title">${escapeHtml(link.title)}</div>
+            <div class="link-subtitle">${escapeHtml(link.subtitle)}</div>
           </div>
         `;
         linksContainer.appendChild(a);
       });
 
-      // Render Music Tracks
+      // Audio Player Display
       if (profileData.tracks && profileData.tracks.length > 0) {
         document.getElementById("musicPlayer").style.display = "flex";
-        document.getElementById("trackName").textContent = profileData.tracks[currentTrackIndex].name;
+        document.getElementById("trackName").textContent = `🎵 ${profileData.tracks[currentTrackIndex].name}`;
+      } else {
+        document.getElementById("musicPlayer").style.display = "none";
       }
     }
 
     function loadProfile(username) {
-      const transaction = db.transaction(["profiles"], "readonly");
-      const store = transaction.objectStore("profiles");
+      const tx = db.transaction(["profiles"], "readonly");
+      const store = tx.objectStore("profiles");
       const req = store.get(username);
       req.onsuccess = () => {
         if (req.result) {
@@ -306,36 +532,99 @@
       };
     }
 
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[m]));
+    }
+
     /* ==========================================================================
-       Undo / Redo History Stack
+       Audio Engine & Immediate Sound Effects
        ========================================================================== */
-    function pushHistory() {
+    function playInstantSFX() {
+      if (audioContext.state === 'suspended') audioContext.resume();
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, audioContext.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.start();
+      osc.stop(audioContext.currentTime + 0.04);
+    }
+
+    function handleAudioUpload(evt) {
+      const files = evt.target.files;
+      if (!files.length) return;
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (!profileData.tracks) profileData.tracks = [];
+          profileData.tracks.push({ name: file.name, data: e.target.result });
+          renderProfile();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function toggleMusic() {
+      if (!profileData.tracks || !profileData.tracks.length) return;
+      if (audioPlayer.paused) {
+        audioPlayer.src = profileData.tracks[currentTrackIndex].data;
+        audioPlayer.play();
+        document.getElementById("playPauseBtn").textContent = "⏸️";
+      } else {
+        audioPlayer.pause();
+        document.getElementById("playPauseBtn").textContent = "▶️";
+      }
+    }
+
+    function playNextTrack() {
+      if (!profileData.tracks || !profileData.tracks.length) return;
+      currentTrackIndex = (currentTrackIndex + 1) % profileData.tracks.length;
+      document.getElementById("trackName").textContent = `🎵 ${profileData.tracks[currentTrackIndex].name}`;
+      audioPlayer.src = profileData.tracks[currentTrackIndex].data;
+      audioPlayer.play();
+    }
+
+    function playPrevTrack() {
+      if (!profileData.tracks || !profileData.tracks.length) return;
+      currentTrackIndex = (currentTrackIndex - 1 + profileData.tracks.length) % profileData.tracks.length;
+      document.getElementById("trackName").textContent = `🎵 ${profileData.tracks[currentTrackIndex].name}`;
+      audioPlayer.src = profileData.tracks[currentTrackIndex].data;
+      audioPlayer.play();
+    }
+
+    /* ==========================================================================
+       History Undo/Redo & Profile Editing
+       ========================================================================== */
+    function pushState() {
       historyStack = historyStack.slice(0, historyIndex + 1);
       historyStack.push(JSON.stringify(profileData));
       historyIndex++;
     }
 
-    function undo() {
+    function undoState() {
       if (historyIndex > 0) {
         historyIndex--;
         profileData = JSON.parse(historyStack[historyIndex]);
         renderProfile();
-        saveToDatabase();
+        saveDatabaseRecord();
       }
     }
 
-    function redo() {
+    function redoState() {
       if (historyIndex < historyStack.length - 1) {
         historyIndex++;
         profileData = JSON.parse(historyStack[historyIndex]);
         renderProfile();
-        saveToDatabase();
+        saveDatabaseRecord();
       }
     }
 
-    /* ==========================================================================
-       Edit Mode Functions
-       ========================================================================== */
     function toggleEditMode() {
       isEditing = !isEditing;
       document.body.classList.toggle("is-editing", isEditing);
@@ -352,23 +641,19 @@
       document.getElementById("editCardColor").value = profileData.theme.card;
       document.getElementById("editAccentColor").value = profileData.theme.accent;
 
-      const linksContainer = document.getElementById("editLinksContainer");
-      linksContainer.innerHTML = "";
+      const container = document.getElementById("editLinksContainer");
+      container.innerHTML = "";
       profileData.links.forEach((link, idx) => {
-        linksContainer.appendChild(createLinkEditRow(link, idx));
+        const div = document.createElement("div");
+        div.style.cssText = "background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px;";
+        div.innerHTML = `
+          <input type="text" value="${escapeHtml(link.title)}" placeholder="Title" onchange="updateLink(${idx}, 'title', this.value)">
+          <input type="text" value="${escapeHtml(link.subtitle)}" placeholder="Subtitle" onchange="updateLink(${idx}, 'subtitle', this.value)">
+          <input type="text" value="${escapeHtml(link.url)}" placeholder="URL" onchange="updateLink(${idx}, 'url', this.value)">
+          <button class="btn btn-danger" style="margin-top: 4px; padding: 4px 8px; font-size: 0.75rem;" onclick="removeLink(${idx})">Delete Link</button>
+        `;
+        container.appendChild(div);
       });
-    }
-
-    function createLinkEditRow(link, idx) {
-      const div = document.createElement("div");
-      div.style.marginBottom = "10px";
-      div.innerHTML = `
-        <input type="text" value="${link.title}" placeholder="Title" onchange="updateLink(${idx}, 'title', this.value)">
-        <input type="text" value="${link.subtitle}" placeholder="Subtitle" onchange="updateLink(${idx}, 'subtitle', this.value)">
-        <input type="text" value="${link.url}" placeholder="URL" onchange="updateLink(${idx}, 'url', this.value)">
-        <button class="btn btn-secondary" style="margin-top:4px; background: #da373d;" onclick="removeLink(${idx})">Delete</button>
-      `;
-      return div;
     }
 
     function addLinkField() {
@@ -376,12 +661,12 @@
       populateEditModal();
     }
 
-    function updateLink(index, field, value) {
-      profileData.links[index][field] = value;
+    function updateLink(idx, key, val) {
+      profileData.links[idx][key] = val;
     }
 
-    function removeLink(index) {
-      profileData.links.splice(index, 1);
+    function removeLink(idx) {
+      profileData.links.splice(idx, 1);
       populateEditModal();
     }
 
@@ -392,62 +677,34 @@
       profileData.theme.card = document.getElementById("editCardColor").value;
       profileData.theme.accent = document.getElementById("editAccentColor").value;
 
-      // Handle Avatar Image Upload
-      const fileInput = document.getElementById("editAvatarFile");
-      if (fileInput.files && fileInput.files[0]) {
+      const avatarInput = document.getElementById("editAvatarFile");
+      if (avatarInput.files && avatarInput.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
           profileData.avatar = e.target.result;
-          finishSave();
+          finishSaveProcess();
         };
-        reader.readAsDataURL(fileInput.files[0]);
+        reader.readAsDataURL(avatarInput.files[0]);
       } else {
-        finishSave();
+        finishSaveProcess();
       }
     }
 
-    function finishSave() {
-      pushHistory();
+    function finishSaveProcess() {
+      pushState();
       renderProfile();
-      saveToDatabase();
+      saveDatabaseRecord();
       closeModal("editModal");
       isEditing = false;
     }
 
-    /* ==========================================================================
-       Music Controls
-       ========================================================================== */
-    function toggleMusic() {
-      if (!profileData.tracks || profileData.tracks.length === 0) return;
-      if (audioPlayer.paused) {
-        audioPlayer.src = profileData.tracks[currentTrackIndex].data;
-        audioPlayer.play();
-        document.getElementById("playPauseBtn").textContent = "⏸️";
-      } else {
-        audioPlayer.pause();
-        document.getElementById("playPauseBtn").textContent = "▶️";
-      }
+    function saveDatabaseRecord() {
+      if (!currentUser) return;
+      const tx = db.transaction(["profiles"], "readwrite");
+      const store = tx.objectStore("profiles");
+      store.put(profileData);
     }
 
-    function playNextTrack() {
-      if (!profileData.tracks.length) return;
-      currentTrackIndex = (currentTrackIndex + 1) % profileData.tracks.length;
-      document.getElementById("trackName").textContent = profileData.tracks[currentTrackIndex].name;
-      audioPlayer.src = profileData.tracks[currentTrackIndex].data;
-      audioPlayer.play();
-    }
-
-    function playPrevTrack() {
-      if (!profileData.tracks.length) return;
-      currentTrackIndex = (currentTrackIndex - 1 + profileData.tracks.length) % profileData.tracks.length;
-      document.getElementById("trackName").textContent = profileData.tracks[currentTrackIndex].name;
-      audioPlayer.src = profileData.tracks[currentTrackIndex].data;
-      audioPlayer.play();
-    }
-
-    /* ==========================================================================
-       Modal UI Helpers
-       ========================================================================== */
     function openModal(id) { document.getElementById(id).classList.add("active"); }
     function closeModal(id) { document.getElementById(id).classList.remove("active"); }
     function openAuthModal() { openModal("authModal"); }
